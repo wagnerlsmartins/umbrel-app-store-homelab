@@ -3,11 +3,11 @@
 # (upgrade automático de config) e troca os "generate" por tokens aleatórios
 # ao gerar o registration. Nada aqui é segredo.
 homeserver:
-  address: http://homelab-matrix-zap_synapse_1:8008
+  address: http://synapse:8008
   domain: matrix.virasistema.com
 
 appservice:
-  address: http://homelab-matrix-zap_whatsapp_1:29318
+  address: http://whatsapp:29318
   hostname: 0.0.0.0
   port: 29318
   id: whatsapp
