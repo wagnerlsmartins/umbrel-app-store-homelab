@@ -14,4 +14,9 @@ if [ ! -f /data/registration.yaml ]; then
   mautrix-whatsapp -g -c /data/config.yaml -r /data/registration.yaml
 fi
 
+# O Synapse roda como uid 1000 e precisa ler o registration; o bridge o
+# gera como root 600. Idempotente a cada boot.
+chown 1000:1000 /data/registration.yaml
+chmod 640 /data/registration.yaml
+
 exec mautrix-whatsapp -c /data/config.yaml
