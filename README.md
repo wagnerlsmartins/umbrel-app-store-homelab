@@ -63,9 +63,10 @@ registrado como appservice.
    As portas 8890/8891 em HTTP seguem existindo para debug e para tráfego
    servidor-a-servidor na tailnet.
 5. Conversar com `@whatsappbot:matrix.virasistema.com` e mandar `login` —
-   o bot devolve o QR para parear **um número descartável primeiro**;
-   escanear com o celular do número. Só depois do teste validado é que WMI
-   e Campus são pareados (ordem da D-040).
+   o bot devolve o QR; escanear com o celular do número. Ordem decidida
+   pelo Wagner em 2026-08-28: **o número da WMI é o próprio teste** (linha
+   recém-ativada, sem histórico, custo de perda mínimo); validado, entra o
+   Campus. Sem número descartável dedicado.
 
 ### Plano de validação (primeira instalação)
 
