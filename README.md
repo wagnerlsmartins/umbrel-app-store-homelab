@@ -73,7 +73,10 @@ registrado como appservice.
       primeira instalação real, depois de um ajuste: o bridge gerava o
       `registration.yaml` como root 600 e o Synapse (uid 1000) não lia
       (crash loop). Corrigido no `whatsapp-start.sh`.
-- [ ] Element abre em `http://umbrel:8890` e loga.
+- [x] Element abre e loga — validado em 2026-08-28 via
+      `https://umbrel.tail63b303.ts.net:9443`; o Wagner conversou com o
+      `@whatsappbot` e o `help` respondeu (appservice funcional nos dois
+      sentidos).
 - [ ] `login` no bot pareia número descartável; mensagem recebida no zap
       aparece como room no Matrix.
 - [ ] Reinício do app preserva sessão do WhatsApp e histórico.
