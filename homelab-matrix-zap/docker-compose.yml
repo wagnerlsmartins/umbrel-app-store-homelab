@@ -1,0 +1,50 @@
+version: "3.7"
+
+# Matrix Zap — Synapse + mautrix-whatsapp + Element Web.
+# A UI do app (porta 8890) é o Element. O Synapse é publicado direto na
+# porta 8891 do host, porque o Element no navegador e o worker de intake
+# falam com ele por fora do proxy (http://umbrel:8891 na tailnet).
+
+services:
+  app_proxy:
+    environment:
+      APP_HOST: homelab-matrix-zap_element_1
+      APP_PORT: 80
+      PROXY_AUTH_ADD: "false"
+
+  synapse:
+    image: matrixdotorg/synapse:v1.159.0@sha256:edf259d2b575b669a3e81024918ab8d5cfb7d2fba5a53c9e09695f1abc5645cb
+    restart: on-failure
+    stop_grace_period: 1m
+    entrypoint: ["bash", "/scripts/synapse-start.sh"]
+    ports:
+      - "8891:8008"
+    environment:
+      UID: "1000"
+      GID: "1000"
+      SYNAPSE_SERVER_NAME: "matrix.wagnermartins.in"
+      SYNAPSE_REPORT_STATS: "no"
+      SYNAPSE_HTTP_PORT: "8008"
+      SYNAPSE_NO_TLS: "yes"
+    volumes:
+      - ${APP_DATA_DIR}/data/synapse:/data
+      - ${APP_DATA_DIR}/data/whatsapp:/bridges/whatsapp:ro
+      - ${APP_DATA_DIR}/scripts:/scripts:ro
+
+  whatsapp:
+    image: dock.mau.dev/mautrix/whatsapp:latest
+    restart: on-failure
+    stop_grace_period: 30s
+    entrypoint: ["sh", "/scripts/whatsapp-start.sh"]
+    volumes:
+      - ${APP_DATA_DIR}/data/whatsapp:/data
+      - ${APP_DATA_DIR}/templates:/templates:ro
+      - ${APP_DATA_DIR}/scripts:/scripts:ro
+
+  element:
+    image: vectorim/element-web:v1.12.26@sha256:a9be04cef41ed94cba0dcaeca5a81f89826d4f8be3d57ba5a6fa988f34eda703
+    restart: on-failure
+    user: "nginx:nginx"
+    stop_grace_period: 1m
+    volumes:
+      - ${APP_DATA_DIR}/element/config.json:/app/config.json:ro
