@@ -54,7 +54,14 @@ registrado como appservice.
      -c /data/homeserver.yaml http://localhost:8008
    ```
 
-4. Abrir o app (Element, porta 8890), logar como `wagner`.
+4. Abrir o Element e logar como `wagner`. **Atenção: o Element exige
+   contexto seguro (HTTPS)** — em `http://` ele trava em "Browser
+   insuportado". O acesso é pelo Tailscale Serve, configurado no aparelho:
+   - Element: `https://umbrel.tail63b303.ts.net:9443`
+   - Synapse: `https://umbrel.tail63b303.ts.net:9444` (base_url do Element
+     e endpoint para workers/clientes)
+   As portas 8890/8891 em HTTP seguem existindo para debug e para tráfego
+   servidor-a-servidor na tailnet.
 5. Conversar com `@whatsappbot:matrix.virasistema.com` e mandar `login` —
    o bot devolve o QR para parear **um número descartável primeiro**;
    escanear com o celular do número. Só depois do teste validado é que WMI
