@@ -47,4 +47,8 @@ services:
     user: "nginx:nginx"
     stop_grace_period: 1m
     volumes:
+      # O Element escolhe config.<hostname>.json pelo host da URL aberta;
+      # cada variante aponta o base_url para o mesmo host, senão o app
+      # trava esperando um hostname que o navegador não resolve.
       - ${APP_DATA_DIR}/element/config.json:/app/config.json:ro
+      - ${APP_DATA_DIR}/element/config.umbrel.local.json:/app/config.umbrel.local.json:ro

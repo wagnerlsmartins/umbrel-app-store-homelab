@@ -1,0 +1,12 @@
+{
+  "default_server_config": {
+    "m.homeserver": {
+      "base_url": "http://umbrel.local:8891",
+      "server_name": "matrix.virasistema.com"
+    }
+  },
+  "brand": "Matrix Zap",
+  "disable_custom_urls": false,
+  "disable_guests": true,
+  "default_theme": "light"
+}
