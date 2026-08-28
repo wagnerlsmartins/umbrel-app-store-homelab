@@ -62,8 +62,10 @@ registrado como appservice.
 
 ### Plano de validação (primeira instalação)
 
-- [ ] Os três containers sobem e estabilizam (`whatsapp` gera
-      `registration.yaml`; `synapse` destrava e escuta em 8891).
+- [x] Os três containers sobem e estabilizam — validado em 2026-08-28, na
+      primeira instalação real, depois de um ajuste: o bridge gerava o
+      `registration.yaml` como root 600 e o Synapse (uid 1000) não lia
+      (crash loop). Corrigido no `whatsapp-start.sh`.
 - [ ] Element abre em `http://umbrel:8890` e loga.
 - [ ] `login` no bot pareia número descartável; mensagem recebida no zap
       aparece como room no Matrix.
@@ -74,11 +76,10 @@ registrado como appservice.
 
 ### Estado
 
-**Escrito em 2026-08-28, ainda não instalado em aparelho nenhum.** O
-bootstrap (scripts de `scripts/`) foi revisado em código, não observado em
-execução. Se o formato do config do mautrix tiver mudado além do upgrade
-automático, o log do container `whatsapp` diz o que ajustar no
-`app-data/homelab-matrix-zap/data/whatsapp/config.yaml`.
+**Instalado no Umbrel Home em 2026-08-28.** Bootstrap observado em
+execução: config do mautrix gerado e expandido pelos defaults, registration
+emitido, appservice conectado (o perfil de `@whatsappbot` responde no
+homeserver). Falta a validação com número descartável.
 
 ### Limites conhecidos da v0.1
 
