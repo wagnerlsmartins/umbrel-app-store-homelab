@@ -2,7 +2,7 @@
   "default_server_config": {
     "m.homeserver": {
       "base_url": "http://umbrel:8891",
-      "server_name": "matrix.wagnermartins.in"
+      "server_name": "matrix.virasistema.com"
     }
   },
   "brand": "Matrix Zap",

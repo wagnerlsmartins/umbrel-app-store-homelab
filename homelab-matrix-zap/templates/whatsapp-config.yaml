@@ -4,7 +4,7 @@
 # ao gerar o registration. Nada aqui é segredo.
 homeserver:
   address: http://homelab-matrix-zap_synapse_1:8008
-  domain: matrix.wagnermartins.in
+  domain: matrix.virasistema.com
 
 appservice:
   address: http://homelab-matrix-zap_whatsapp_1:29318
@@ -25,5 +25,5 @@ bridge:
   command_prefix: "!wa"
   permissions:
     "*": relay
-    "matrix.wagnermartins.in": user
-    "@wagner:matrix.wagnermartins.in": admin
+    "matrix.virasistema.com": user
+    "@wagner:matrix.virasistema.com": admin

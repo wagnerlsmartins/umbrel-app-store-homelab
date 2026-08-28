@@ -12,17 +12,19 @@ A espinha Matrix da ingestão de contexto do Vira Sistema
 Por que não o app oficial de Synapse da loja do Umbrel: lá o `server_name`
 fica amarrado ao endereço Tor do aparelho (identidade permanente e feia) e o
 registro de contas nasce aberto. Aqui o `server_name` é
-**`matrix.wagnermartins.in`**, o registro é fechado e o bridge já vem
+**`matrix.virasistema.com`**, o registro é fechado e o bridge já vem
 registrado como appservice.
 
 ### Decisões congeladas no primeiro boot
 
-- **`server_name: matrix.wagnermartins.in`** — é a identidade permanente do
-  homeserver (`@wagner:matrix.wagnermartins.in`). **Não muda depois** sem
+- **`server_name: matrix.virasistema.com`** — é a identidade permanente do
+  homeserver (`@wagner:matrix.virasistema.com`). **Não muda depois** sem
   recomeçar do zero. Se quiser outro, edite `docker-compose.yml`,
   `templates/whatsapp-config.yaml` e `element/config.json` **antes** de
-  instalar. Não usamos `virasistema.com` porque o domínio ainda não foi
-  comprado (gate G-006 do vira-sistema).
+  instalar. `virasistema.com` é do Wagner desde 2026-07-10 (Name.com, DNS
+  na Vercel); o subdomínio `matrix.` não precisa de registro DNS público —
+  sem federação, o nome é só identidade, e os clientes falam com o
+  homeserver por `http://umbrel:8891` na tailnet.
 - Sem federação, sem exposição pública: o Synapse fala HTTP puro na porta
   `8891` do host, alcançável pela rede local e pela tailnet
   (`http://umbrel:8891`).
@@ -53,7 +55,7 @@ registrado como appservice.
    ```
 
 4. Abrir o app (Element, porta 8890), logar como `wagner`.
-5. Conversar com `@whatsappbot:matrix.wagnermartins.in` e mandar `login` —
+5. Conversar com `@whatsappbot:matrix.virasistema.com` e mandar `login` —
    o bot devolve o QR para parear **um número descartável primeiro**;
    escanear com o celular do número. Só depois do teste validado é que WMI
    e Campus são pareados (ordem da D-040).
