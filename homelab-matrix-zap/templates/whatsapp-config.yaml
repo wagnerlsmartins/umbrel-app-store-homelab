@@ -23,6 +23,18 @@ database:
 
 bridge:
   command_prefix: "!wa"
+  # Modo relay: um usuário do Matrix sem login próprio (o @agente) escreve na
+  # sala e a ponte entrega no WhatsApp pela linha já pareada, prefixando a
+  # mensagem com o nome de quem escreveu. Ligado em 2026-08-30, quando o
+  # gateway da WMI passou a operar com agente compondo mensagem.
+  #
+  # Ligar aqui não abre nada sozinho: a sala só passa a relayar depois de um
+  # `!wa set-relay` dado por um admin dentro dela. Sala não marcada continua
+  # inalcançável. Contrato de uso no home-lab, em
+  # `infra/servicos/gateway-whatsapp-wmi.md`.
+  relay:
+    enabled: true
+    admin_only: true
   permissions:
     "*": relay
     "matrix.virasistema.com": user
