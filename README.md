@@ -113,13 +113,34 @@ re-parear lá (o pareamento é da ponte, não do servidor).
 
 **Pareamento (gate humano: o Wagner, no teclado dele):**
 
-1. Atualizar o app pela UI do umbrelOS (a store mostra 0.2.0). Conferir no
-   Terminal da UI que `templates/signal-config.yaml` e
-   `scripts/signal-start.sh` apareceram em `app-data/homelab-matrix-zap/`;
-   se o update não copiou os arquivos novos, copiá-los à mão do clone e
-   reiniciar o app. O contêiner `signal` sobe, gera o registration e o
-   Synapse reinicia com a linha nova no `homeserver.yaml`. A ponte do
-   WhatsApp não é tocada (sessão em `data/whatsapp`).
+1. Atualizar o app pela UI do umbrelOS (a store mostra 0.2.0). **Fato
+   (31/10/2026): o update do Umbrel troca o `docker-compose.yml` mas não
+   copia `templates/` nem `scripts/` novos para `app-data`**; o `signal`
+   fica em `Restarting` sem o seu script, e o Synapse sobe com o
+   `synapse-start.sh` antigo. Copiar à mão, pelo SSH, e reiniciar os dois:
+
+   ```sh
+   cd ~/umbrel/app-data/homelab-matrix-zap
+   B=https://raw.githubusercontent.com/wagnerlsmartins/umbrel-app-store-homelab/main/homelab-matrix-zap
+   curl -fsSL $B/templates/signal-config.yaml -o templates/signal-config.yaml
+   curl -fsSL $B/scripts/signal-start.sh -o scripts/signal-start.sh
+   curl -fsSL $B/scripts/synapse-start.sh -o scripts/synapse-start.sh
+   chmod +x scripts/*.sh
+   sudo docker restart homelab-matrix-zap_signal_1 && sleep 20
+   sudo docker restart homelab-matrix-zap_synapse_1
+   ```
+
+   O `signal` gera o registration e o Synapse volta com a linha nova no
+   `homeserver.yaml`. A ponte do WhatsApp não é tocada (sessão em
+   `data/whatsapp`). Validado em 31/10: `@signalbot` e `@leitor-pr` com
+   perfil no homeserver.
+
+   **Porta 8890.** O OPDS do acervo (`opds.service`, home-lab) nasceu na
+   mesma porta do Element; o update recriou o `app_proxy` com ela ocupada e
+   o `:9443` passou a mostrar o catálogo. Resolvido movendo o OPDS para
+   `8892` (`infra/servicos/opds-do-acervo.md` do home-lab) e reiniciando o
+   `app_proxy`. Antes de escolher porta para um app novo, `sudo ss -ltnp`
+   no aparelho, não a lista de um documento antigo.
 2. Criar o leitor, no mesmo Terminal:
 
    ```sh
