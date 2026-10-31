@@ -92,6 +92,70 @@ execução: config do mautrix gerado e expandido pelos defaults, registration
 emitido, appservice conectado (o perfil de `@whatsappbot` responde no
 homeserver). Falta a validação com número descartável.
 
+### Ponte Signal, só leitura (v0.2.0, 2026-10-31)
+
+Toda a comunicação da PR Capital (mesa, parceiros, clientes) corre no
+Signal, na conta pessoal do Wagner, que é 100% PR (dito por ele em 31/10).
+A ponte `mautrix-signal` entra neste app para **absorver** esses grupos no
+Matrix, sem agente falando em nome dele. O servidor gerenciado só da PR
+(etke.cc) fica para depois: aqui é a gambiarra que agiliza, e a migração é
+re-parear lá (o pareamento é da ponte, não do servidor).
+
+**Como fica só leitura, por mecanismo e não por disciplina:**
+
+- `relay.enabled: false` no template: mensagem de outro usuário do Matrix
+  numa sala-portal do Signal não é entregue, nem com `set-relay`.
+- Só `@wagner` tem login na ponte. O que **ele** escrever numa sala-portal
+  pelo Element sai no Signal como ele; é a conta dele, não é o bot.
+- O leitor é uma conta nova, **`@leitor-pr`**, só convidada às salas, sem
+  login na ponte e sem relação com o `@agente` da WMI, para o Vigia do
+  gateway (que lê as salas do `@agente`) nunca ver conversa da PR.
+
+**Pareamento (gate humano: o Wagner, no teclado dele):**
+
+1. Atualizar o app pela UI do umbrelOS (a store mostra 0.2.0). Conferir no
+   Terminal da UI que `templates/signal-config.yaml` e
+   `scripts/signal-start.sh` apareceram em `app-data/homelab-matrix-zap/`;
+   se o update não copiou os arquivos novos, copiá-los à mão do clone e
+   reiniciar o app. O contêiner `signal` sobe, gera o registration e o
+   Synapse reinicia com a linha nova no `homeserver.yaml`. A ponte do
+   WhatsApp não é tocada (sessão em `data/whatsapp`).
+2. Criar o leitor, no mesmo Terminal:
+
+   ```sh
+   sudo docker exec -it homelab-matrix-zap_synapse_1 \
+     register_new_matrix_user -u leitor-pr --no-admin \
+     -c /data/homeserver.yaml http://localhost:8008
+   ```
+
+   O token de acesso do `@leitor-pr` vai para `.private/credentials/matrix/`
+   do home-lab, nunca para repo.
+3. No Element, como `@wagner`, abrir DM com `@signalbot:matrix.virasistema.com`
+   e mandar `login qr`. No iPhone: Signal → Ajustes → Dispositivos
+   conectados → Conectar novo dispositivo → escanear. O aparelho aparece
+   como "mautrix-signal" na lista; só o Wagner vê essa lista, contato nenhum.
+4. Esperar as salas-portal nascerem (uma por grupo e por conversa). O
+   histórico **anterior** ao pareamento não vem: o Signal entrega a
+   dispositivo conectado só a partir do pareamento (a verificar se a versão
+   atual da ponte aproveita a transferência de histórico que o Signal faz
+   para aparelho novo; não contar com isso).
+5. Convidar `@leitor-pr` às salas que a PR quer absorver (todas, segundo o
+   Wagner). O convite é a lista de permissão: sala sem o leitor não é lida.
+
+**Quando quiser que um agente envie** (passo explícito e reversível):
+`relay.enabled: true` no config vivo (`data/signal/config.yaml`), reiniciar
+o contêiner, e `!signal set-relay` **na sala**, dado pelo `@wagner`. Igual ao
+WhatsApp: sala não marcada continua inalcançável. A mensagem sai pela conta
+dele, com o nome de quem escreveu na frente; antes de ligar, decidir se isso
+serve num grupo de cliente.
+
+**Riscos que esta versão não cobre:** a conversa da PR passa a morar em
+claro no Synapse da WMI até a migração (contraria a separação proposta na
+`base/11` da PR; decisão do Wagner em 31/10, temporária); anexo de
+contraparte é baixado pela ponte para o servidor (a regra de abrir anexo em
+ambiente isolado segue valendo para quem abre); perder o iPhone ou trocar de
+número derruba o pareamento (re-parear).
+
 ### Limites conhecidos da v0.1
 
 - SQLite no Synapse e no bridge — suficiente para a escala pequena do
