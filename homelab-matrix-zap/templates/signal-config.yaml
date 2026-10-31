@@ -1,0 +1,44 @@
+# Template mínimo do mautrix-signal para o Matrix Zap.
+# Mesmo método do WhatsApp: o bridge completa as chaves ausentes com os
+# defaults dele no primeiro boot e troca os "generate" por tokens aleatórios
+# ao gerar o registration. Nada aqui é segredo.
+#
+# Postura desta ponte (2026-10-31): SÓ LEITURA. A conta pessoal de Signal do
+# Wagner é pareada como "dispositivo conectado" e os grupos chegam ao Matrix
+# como salas-portal. Ninguém além dele alcança o Signal por aqui:
+#   - relay desligado: mensagem de outro usuário do Matrix numa sala-portal
+#     não é entregue no Signal, nem com `set-relay`;
+#   - só o @wagner tem login na ponte; os demais usuários do servidor só
+#     podem ser convidados às salas e ler.
+# Quando ele quiser que um agente envie, o passo é explícito e reversível:
+# `relay.enabled: true` no config vivo + `!signal set-relay` na sala, igual
+# ao WhatsApp. Até lá, o que ele mesmo escrever numa sala-portal pelo Element
+# sai no Signal como ele — isso é a própria conta dele, não é o bot.
+homeserver:
+  address: http://synapse:8008
+  domain: matrix.virasistema.com
+
+appservice:
+  address: http://signal:29328
+  hostname: 0.0.0.0
+  port: 29328
+  id: signal
+  bot:
+    username: signalbot
+    displayname: Ponte Signal
+  as_token: generate
+  hs_token: generate
+
+database:
+  type: sqlite3-fk-wal
+  uri: file:/data/mautrix-signal.db?_txlock=immediate
+
+bridge:
+  command_prefix: "!signal"
+  relay:
+    enabled: false
+    admin_only: true
+  permissions:
+    "*": relay
+    "matrix.virasistema.com": user
+    "@wagner:matrix.virasistema.com": admin

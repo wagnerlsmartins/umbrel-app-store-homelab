@@ -1,6 +1,6 @@
 version: "3.7"
 
-# Matrix Zap — Synapse + mautrix-whatsapp + Element Web.
+# Matrix Zap — Synapse + mautrix-whatsapp + mautrix-signal + Element Web.
 # A UI do app (porta 8890) é o Element. O Synapse é publicado direto na
 # porta 8891 do host, porque o Element no navegador e o worker de intake
 # falam com ele por fora do proxy (http://umbrel:8891 na tailnet).
@@ -29,6 +29,7 @@ services:
     volumes:
       - ${APP_DATA_DIR}/data/synapse:/data
       - ${APP_DATA_DIR}/data/whatsapp:/bridges/whatsapp:ro
+      - ${APP_DATA_DIR}/data/signal:/bridges/signal:ro
       - ${APP_DATA_DIR}/scripts:/scripts:ro
 
   whatsapp:
@@ -38,6 +39,19 @@ services:
     entrypoint: ["sh", "/scripts/whatsapp-start.sh"]
     volumes:
       - ${APP_DATA_DIR}/data/whatsapp:/data
+      - ${APP_DATA_DIR}/templates:/templates:ro
+      - ${APP_DATA_DIR}/scripts:/scripts:ro
+
+  # Ponte Signal, só leitura por padrão (ver templates/signal-config.yaml).
+  # Pareia a conta pessoal de Signal do Wagner como dispositivo conectado;
+  # o QR sai de `!signal login qr` na DM com o @signalbot, no Element.
+  signal:
+    image: dock.mau.dev/mautrix/signal:latest
+    restart: on-failure
+    stop_grace_period: 30s
+    entrypoint: ["sh", "/scripts/signal-start.sh"]
+    volumes:
+      - ${APP_DATA_DIR}/data/signal:/data
       - ${APP_DATA_DIR}/templates:/templates:ro
       - ${APP_DATA_DIR}/scripts:/scripts:ro
 

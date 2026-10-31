@@ -2,13 +2,14 @@ manifestVersion: 1
 id: homelab-matrix-zap
 category: social
 name: Matrix Zap
-version: "0.1.0"
-tagline: Espinha Matrix + bridge WhatsApp do Home Lab
+version: "0.2.0"
+tagline: Espinha Matrix + bridges WhatsApp e Signal do Home Lab
 description: >-
   Stack privado do Home Lab para a ingestão de contexto do Vira Sistema
   (D-040): homeserver Synapse com server_name próprio, bridge
-  mautrix-whatsapp (um login por número — WMI, Campus de Paciologia) e
-  Element Web como interface de observação.
+  mautrix-whatsapp (um login por número — WMI, Campus de Paciologia),
+  bridge mautrix-signal (conta pessoal do Wagner, só leitura) e Element Web
+  como interface de observação.
 
 
   Diferenças em relação ao app oficial de Synapse da loja do Umbrel:
@@ -33,7 +34,7 @@ torOnly: false
 submitter: Wagner Martins
 submission: https://github.com/wagnerlsmartins/umbrel-app-store-homelab
 releaseNotes: >-
-  Primeira versão: Synapse + mautrix-whatsapp + Element Web, bootstrap
-  automático do registration do bridge, testado ainda apenas em revisão de
-  código — instalar e validar com número descartável antes de parear os
-  números oficiais.
+  0.2.0: entra a ponte mautrix-signal, em modo só leitura (relay desligado;
+  só o @wagner com login). Instalação existente: o update acrescenta a linha
+  do Signal ao homeserver.yaml e sobe o contêiner; o pareamento é `!signal
+  login qr` no Element. A ponte do WhatsApp não é tocada.
